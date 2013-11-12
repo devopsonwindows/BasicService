@@ -13,11 +13,30 @@ namespace BasicServiceFramework
         {
             if (Environment.UserInteractive)
             {
-                using (var service= new T())
+                var cmd =
+                    (Environment.GetCommandLineArgs().Skip(1).FirstOrDefault() ?? "")
+                    .ToLower();
+                switch (cmd)
                 {
-                    service.Start();
-                    Console.WriteLine("Running {0}, press any key to stop", serviceName);
-                    Console.ReadKey();
+                    case "i":
+                    case "install":
+                        Console.WriteLine("Installing {0}", serviceName);
+                        BasicServiceInstaller.Install(serviceName);
+                        break;
+                    case "u":
+                    case "uninstall":
+                        Console.WriteLine("Uninstalling {0}", serviceName);
+                        BasicServiceInstaller.Uninstall(serviceName);
+                        break;
+                    default:
+                        using (var service = new T())
+                        {
+                            service.Start();
+                            Console.WriteLine(
+                                "Running {0}, press any key to stop", serviceName);
+                            Console.ReadKey();
+                        }
+                        break;
                 }
             }
             else
