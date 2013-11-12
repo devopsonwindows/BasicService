@@ -18,8 +18,16 @@ namespace BasicServiceFramework
 
         protected override void OnStart(string[] args)
         {
-            _service = new T();
-            _service.Start();
+            try
+            {
+                _service = new T();
+                _service.Start();
+            }
+            catch
+            {
+                ExitCode = 1064;
+                throw;
+            }
         }
 
         protected override void OnStop()

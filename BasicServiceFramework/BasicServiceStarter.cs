@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.ServiceProcess;
 using System.Text;
@@ -11,6 +12,16 @@ namespace BasicServiceFramework
     {
         public static void Run<T>(string serviceName) where T : IService, new()
         {
+            AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+                {
+                    if (EventLog.SourceExists(serviceName))
+                    {
+                        EventLog.WriteEntry(serviceName,
+                            "Fatal Exception : " + Environment.NewLine +
+                            e.ExceptionObject, EventLogEntryType.Error);
+                    }
+                };
+
             if (Environment.UserInteractive)
             {
                 var cmd =
