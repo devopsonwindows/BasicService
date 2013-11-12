@@ -12,18 +12,13 @@ namespace BasicServiceFramework
         void Start();
     }
 
-    public class BasicService : ServiceBase
+    public class BasicService<T> : ServiceBase where T : IService, new()
     {
-        private readonly IService _service;
-
-        public BasicService(IService service, string name)
-        {
-            _service = service;
-            ServiceName = name;
-        }
+        private IService _service;
 
         protected override void OnStart(string[] args)
         {
+            _service = new T();
             _service.Start();
         }
 
