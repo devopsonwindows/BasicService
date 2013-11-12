@@ -7,21 +7,15 @@ using System.Threading.Tasks;
 
 namespace BasicServiceFramework
 {
-    public interface IService : IDisposable
+    class BasicService<T> : ServiceBase where T : IDisposable, new()
     {
-        void Start();
-    }
-
-    public class BasicService<T> : ServiceBase where T : IService, new()
-    {
-        private IService _service;
+        private IDisposable _service;
 
         protected override void OnStart(string[] args)
         {
             try
             {
                 _service = new T();
-                _service.Start();
             }
             catch
             {

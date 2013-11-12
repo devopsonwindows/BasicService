@@ -10,7 +10,7 @@ namespace BasicServiceFramework
 {
     public static class BasicServiceStarter
     {
-        public static void Run<T>(string serviceName) where T : IService, new()
+        public static void Run<T>(string serviceName) where T : IDisposable, new()
         {
             AppDomain.CurrentDomain.UnhandledException += (s, e) =>
                 {
@@ -42,7 +42,6 @@ namespace BasicServiceFramework
                     default:
                         using (var service = new T())
                         {
-                            service.Start();
                             Console.WriteLine(
                                 "Running {0}, press any key to stop", serviceName);
                             Console.ReadKey();

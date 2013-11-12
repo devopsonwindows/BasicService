@@ -13,34 +13,20 @@ namespace DemoService
 {
     class Program
     {
-        public const string Name = "DemoService";
-
         static void Main(string[] args)
         {
-            BasicServiceStarter.Run<MyService>(Name);
+            BasicServiceStarter.Run<MyService>("DemoService");
         }
     }
 
-    class MyService : IService
+    class MyService : IDisposable
     {
-        private bool _stopped;
-
         public void Start()
         {
-            ThreadPool.QueueUserWorkItem(
-                o =>
-                {
-                    while (!_stopped)
-                    {
-                        Console.WriteLine("Still here!");
-                        Thread.Sleep(1000);
-                    }
-                });
         }
 
         public void Dispose()
         {
-            _stopped = true;
         }
     }
 }
